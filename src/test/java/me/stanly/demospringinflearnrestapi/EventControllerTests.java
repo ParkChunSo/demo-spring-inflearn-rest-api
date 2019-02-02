@@ -37,7 +37,6 @@ public class EventControllerTests {
 
     @Test
     public void creatEvent() throws Exception {
-
         Event event = Event.builder()
                     .id(100)
                     .name("spring")
@@ -66,5 +65,31 @@ public class EventControllerTests {
                 .andExpect(jsonPath("offline").value(Matchers.not(true)));
     }
 
+    @Test
+    public void creatEvent_Bad_Request() throws Exception {
+        Event event = Event.builder()
+                .id(100)
+                .name("spring")
+                .description("REST API")
+                .beginEnrollmentDateTime(LocalDateTime.of(2019, 01, 31, 14, 00))
+                .closeEnrollmentDateTime(LocalDateTime.of(2019, 01, 31, 19, 00))
+                .beginEventDateTime(LocalDateTime.of(2019, 01, 29, 14, 00))
+                .endEventDateTime(LocalDateTime.of(2019, 01, 29, 14, 00))
+                .basePrice(100)
+                .maxPrice(200)
+                .limitOfEnrollment(100)
+                .location("강남역")
+                .free(true)
+                .offline(false)
+                .build();
+
+        mockMvc.perform(post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaTypes.HAL_JSON)
+                .content(objectMapper.writeValueAsString(event))
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 
 }
