@@ -1,6 +1,7 @@
 package me.stanly.demospringinflearnrestapi;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.stanly.demospringinflearnrestapi.common.TestDescription;
 import me.stanly.demospringinflearnrestapi.event.Event;
 import me.stanly.demospringinflearnrestapi.event.EventDto;
 import org.hamcrest.Matchers;
@@ -33,6 +34,7 @@ public class EventControllerTests {
     ObjectMapper objectMapper;
 
     @Test
+    @TestDescription("정상적으로 이벤트를 생성하는 테스트")
     public void creatEvent() throws Exception {
         EventDto event = EventDto.builder()
 //                    .id(100)
@@ -63,6 +65,7 @@ public class EventControllerTests {
     }
 
     @Test
+    @TestDescription("입력 받을 수 없는 값을 사용하는 경우에 에러가 발생하는 테스트")
     public void creatEvent_Bad_Request() throws Exception {
         Event event = Event.builder()
                 .id(100)
@@ -90,6 +93,7 @@ public class EventControllerTests {
      }
 
      @Test
+     @TestDescription("입력이 비어있는 경우에 에러가 발생하는 테스트")
     public void crestEvent_Bad_Request_Empty_Input() throws Exception {
          EventDto eventDto = EventDto.builder()
                  .name("spring")
