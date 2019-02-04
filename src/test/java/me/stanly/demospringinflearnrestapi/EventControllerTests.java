@@ -91,7 +91,18 @@ public class EventControllerTests {
 
      @Test
     public void crestEvent_Bad_Request_Empty_Input() throws Exception {
-         EventDto eventDto = EventDto.builder().build();
+         EventDto eventDto = EventDto.builder()
+                 .name("spring")
+                 .description("REST API")
+                 .beginEnrollmentDateTime(LocalDateTime.of(2019, 01, 31, 14, 00))
+                 .closeEnrollmentDateTime(LocalDateTime.of(2019, 01, 29, 19, 00))
+                 .beginEventDateTime(LocalDateTime.of(2019, 01, 28, 14, 00))
+                 .endEventDateTime(LocalDateTime.of(2019, 01, 27, 14, 00))
+                 .basePrice(10000)
+                 .maxPrice(200)
+                 .limitOfEnrollment(100)
+                 .location("강남역")
+                 .build();
 
          this.mockMvc.perform(post("/api/events")
                              .contentType(MediaType.APPLICATION_JSON_UTF8)
