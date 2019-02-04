@@ -93,25 +93,43 @@ public class EventControllerTests {
      }
 
      @Test
-     @TestDescription("입력이 비어있는 경우에 에러가 발생하는 테스트")
+    @TestDescription("입력이 비어있는 경우에 에러가 발생하는 테스트")
     public void crestEvent_Bad_Request_Empty_Input() throws Exception {
-         EventDto eventDto = EventDto.builder()
-                 .name("spring")
-                 .description("REST API")
-                 .beginEnrollmentDateTime(LocalDateTime.of(2019, 01, 31, 14, 00))
-                 .closeEnrollmentDateTime(LocalDateTime.of(2019, 01, 29, 19, 00))
-                 .beginEventDateTime(LocalDateTime.of(2019, 01, 28, 14, 00))
-                 .endEventDateTime(LocalDateTime.of(2019, 01, 27, 14, 00))
-                 .basePrice(10000)
-                 .maxPrice(200)
-                 .limitOfEnrollment(100)
-                 .location("강남역")
-                 .build();
+        EventDto eventDto = EventDto.builder()
+                .build();
 
-         this.mockMvc.perform(post("/api/events")
-                             .contentType(MediaType.APPLICATION_JSON_UTF8)
-                             .content(this.objectMapper.writeValueAsString(eventDto)))
-                 .andExpect(status().isBadRequest());
-     }
+        this.mockMvc.perform(post("/api/events")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.objectMapper.writeValueAsString(eventDto)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @TestDescription("입력이 잘못되어 있는 경우에 에러가 발생하는 테스트")
+    public void crestEvent_Bad_Request_Wrong_Input() throws Exception {
+        EventDto eventDto = EventDto.builder()
+                .name("spring")
+                .description("REST API")
+                .beginEnrollmentDateTime(LocalDateTime.of(2019, 01, 31, 14, 00))
+                .closeEnrollmentDateTime(LocalDateTime.of(2019, 01, 29, 19, 00))
+                .beginEventDateTime(LocalDateTime.of(2019, 01, 28, 14, 00))
+                .endEventDateTime(LocalDateTime.of(2019, 01, 27, 14, 00))
+                .basePrice(10000)
+                .maxPrice(200)
+                .limitOfEnrollment(100)
+                .location("강남역")
+                .build();
+
+        this.mockMvc.perform(post("/api/events")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .content(this.objectMapper.writeValueAsString(eventDto)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$[0].objectName").exists())
+                .andExpect(jsonPath("$[0].field").exists())
+                .andExpect(jsonPath("$[0].defaultMassage").exists())
+                .andExpect(jsonPath("$[0].rejectedValue").exists());
+
+    }
 
 }
